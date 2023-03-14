@@ -1,0 +1,169 @@
+
+es创建索引时指定mapping,indexapi.CreateIndex根据此条curl改写
+curl -X PUT "localhost:9200/taf_stat_log_20201116" -H 'Content-Type: application/json' -d'
+{ "settings" : {
+        "index" : {
+            "number_of_shards" : 5,
+            "number_of_replicas" : 0 ,
+            "refresh_interval":"10s",
+            "translog.durability":"async",
+            "translog.sync_interval": "20s",
+            "translog.flush_threshold_size":"50mb"
+        }
+    },
+  "mappings": {
+      "properties": {
+        "stattime": {
+          "type":  "date"
+        },
+       "f_date": {
+          "type":  "date"
+        },
+       "f_tflag": {
+          "type":  "text",
+          "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": "true",
+          "analyzer": "keyword",
+          "search_analyzer": "keyword",
+          "fielddata": true
+        },
+       "source_id": {
+          "type":  "text",
+           "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": "true",
+          "analyzer": "keyword",
+          "search_analyzer": "keyword",
+          "fielddata": true
+        },
+       "master_name": {
+          "type":  "text",
+            "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": "true",
+          "analyzer": "keyword",
+          "search_analyzer": "keyword",
+          "fielddata": true
+        },
+       "slave_name": {
+          "type":  "text",
+           "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": "true",
+          "analyzer": "keyword",
+          "search_analyzer": "keyword",
+          "fielddata": true
+        },
+       "interface_name": {
+          "type":  "text",
+          "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": "true",
+          "analyzer": "keyword",
+          "search_analyzer": "keyword",
+          "fielddata": true
+        },
+       "taf_version": {
+          "type":  "text",
+          "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": true,
+          "analyzer":"keyword",
+          "search_analyzer":"keyword",
+          "fielddata":true
+        },
+       "master_ip": {
+          "type":  "text",
+           "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": true,
+          "analyzer":"keyword",
+          "search_analyzer":"keyword",
+          "fielddata":true
+        },
+        "slave_ip":{
+          "type":  "text",
+          "fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+          "index": true,
+          "analyzer":"keyword",
+          "search_analyzer":"keyword",
+          "fielddata":true
+        },
+        "slave_port":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "return_value":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "succ_count":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "timeout_count":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "exce_count":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "interv_count":{
+        	"type":"text",
+        	"fields":{
+          	"keyword":{
+          		"type":"keyword"
+          	}
+          },
+        	"index": "true",
+            "analyzer": "keyword",
+            "search_analyzer": "keyword",
+            "fielddata": true
+        },
+        "total_time":{
+        	"type":"long",
+        	"index":"true"
+        },
+        "ave_time":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "maxrsp_time":{
+        	"type":"integer",
+        	"index":"true"
+        },
+        "minrsp_time":{
+        	"type":"integer",
+        	"index":"true"
+        }
+    }
+  }
+}
+'

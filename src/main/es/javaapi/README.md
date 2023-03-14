@@ -1,0 +1,2 @@
+
+更改Utils中的ip和port为自己机器上ES的ip和port,其他代码可以直接运行。
