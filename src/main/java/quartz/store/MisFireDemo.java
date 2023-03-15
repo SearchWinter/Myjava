@@ -10,13 +10,18 @@ import java.util.Date;
  * Created by anjunli on  2021/5/6
  * CronScheduleBuilder  MisFire策略
  * 只有第一种，startAt()设置为过去时间才会生效。
- * withMisfireHandlingInstructionIgnoreMisfires     从错过的第一个时间开始执行，执行所有错过的任务，大于当前时间后，按照正常的cron执行
+ * withMisfireHandlingInstructionIgnoreMisfires     从错过的第一个时间开始执行，执行所有错过的任务，大于当前时间后，按照正常的cron执行,
+ * 除非特别需要，否则不要用这个值，会有大量的任务执行
  * withMisfireHandlingInstructionDoNothing          不触发立即执行，等到下一次cron到当前时间，按照正常cron执行
  * withMisfireHandlingInstructionFireAndProceed     以当前时间触发立即执行，然后按照Cron频率依次执行  默认
  **/
 public class MisFireDemo {
     public static void main(String[] args) throws SchedulerException {
-        StdSchedulerFactory std = new StdSchedulerFactory();
+        //第一种：配置JDBC-JobStoreTX存储调度信息，quartz.propertes 注释打开，停止任务后，再次开启看下一次任务的执行时间
+        StdSchedulerFactory std = new StdSchedulerFactory("quartz.properties");
+
+        //第二种：没有存储调度信息，使用startAt()方法配置启动时间
+//        StdSchedulerFactory std = new StdSchedulerFactory();
         Scheduler scheduler = std.getScheduler();
 
         JobKey jobKey = JobKey.jobKey("job2", "group2");
@@ -27,11 +32,11 @@ public class MisFireDemo {
                 .withIdentity(triggerKey)
                 .withSchedule(
                         CronScheduleBuilder.cronSchedule("0/5 * * ? * * ")
-                                //..withMisfireHandlingInstructionFireAndProceed()
+                                .withMisfireHandlingInstructionFireAndProceed()
                                 //.withMisfireHandlingInstructionDoNothing()
-                                .withMisfireHandlingInstructionIgnoreMisfires()
+//                                .withMisfireHandlingInstructionIgnoreMisfires()
                 )
-                .startAt(new Date(1620286800000L))
+//                .startAt(new Date(1620286800000L))
                 .build();
         if (scheduler.checkExists(jobKey)) {
             scheduler.pauseTrigger(triggerKey);
