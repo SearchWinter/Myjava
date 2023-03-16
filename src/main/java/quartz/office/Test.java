@@ -37,7 +37,11 @@ public class Test {
         simpleTrigger.getJobDataMap().put("t2", "tv2");
         System.out.println(simpleTrigger.getStartTime());
 
-        //创建第二个Job，使用CronScheduleBuilder
+        //注册trigger并启动scheduler
+        scheduler.scheduleJob(job, simpleTrigger);
+        scheduler.start();
+
+        //创建第二个Job，使用CronScheduleBuilder，可以在Scheduler启动后再添加
         JobDetail job2 = JobBuilder.newJob(HelloJob2.class)
                 .withIdentity("myjob2", "mygroup")
                 .build();
@@ -46,14 +50,11 @@ public class Test {
                 .withIdentity("trigger2", "group1")
                 .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ? ").withMisfireHandlingInstructionIgnoreMisfires())
                 .build();
-
-        //注册trigger并启动scheduler
-        scheduler.scheduleJob(job, simpleTrigger);
         scheduler.scheduleJob(job2, trigger2);
-        scheduler.start();
+
 
         //在调用shutdown()前，要给job留时间，不执行shutdown会安装trigger里面的逻辑一直执行
-        TimeUnit.MINUTES.sleep(1L);
-        scheduler.shutdown();
+//        TimeUnit.MINUTES.sleep(1L);
+//        scheduler.shutdown();
     }
 }
